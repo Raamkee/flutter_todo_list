@@ -3,7 +3,9 @@
 ### This is a Hybrid App Written Using Flutter(Dart) Framework For Both Android And iOS Platforms. I Have Included Link To The APP Down The ReadMe. Click And Download The Android APK
 
 > # Todo List Page :smiley:
-![Screenshot 2019-06-10 at 4 08 06 PM](https://user-images.githubusercontent.com/30565388/59191453-3792ba80-8b9d-11e9-9077-f3e8e436b4b2.png)
+
+![Screenshot 2019-06-10 at 4 08 06 PM](https://github.com/Raamkee/flutter_todo_list/blob/main/Screenshots/Screenshot_1615464534.png)
+
 ### This Page Will Display The List Of Tasks From The Database On The Phone
 
 > # Add Task Page :wink: 
