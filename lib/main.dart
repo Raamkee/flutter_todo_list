@@ -7,7 +7,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "ToDo",
+      title: "Notes",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Colors.blue),
       home: NoteList(),

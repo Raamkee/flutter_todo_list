@@ -23,6 +23,8 @@ class NoteDetailState extends State<NoteDetail> {
 
   NoteDetailState(this.note, this.appBarTitle);
 
+  String taskPriority = '';
+
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
@@ -39,126 +41,199 @@ class NoteDetailState extends State<NoteDetail> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(appBarTitle),
-          backgroundColor: Colors.blue,
+          title: Text(
+            appBarTitle,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          backgroundColor: Colors.white.withOpacity(0.2),
+          elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
             onPressed: () {
               moveToLastScreen();
             },
           ),
         ),
-        body: Padding(
-          padding: EdgeInsets.all(10.0),
-          child: Container(
-            height: 400,
-            child: Card(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+        body: Container(
+          // height: 400,
+          // decoration: BoxDecoration(
+          //     color: Colors.white,
+          //     borderRadius: BorderRadius.circular(10),
+          //     boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)]),
+          child: ListView(
+            children: <Widget>[
+              // Padding(
+              //   padding: EdgeInsets.only(top: 15.0, bottom: 5.0),
+              //   child: new ListTile(
+              //     leading: const Icon(Icons.low_priority),
+              //     title: Container(
+              //       decoration: BoxDecoration(
+              //         color: Colors.grey.withOpacity(0.05),
+              //         borderRadius: BorderRadius.circular(10),
+              //         // boxShadow: [
+              //         //   BoxShadow(blurRadius: 3, color: Colors.grey)
+              //         // ],
+              //       ),
+              //       child: DropdownButton(
+              //           isExpanded: true,
+              //           items: _prioities.map((String dropDownStringItem) {
+              //             return DropdownMenuItem<String>(
+              //               value: dropDownStringItem,
+              //               child: Text(dropDownStringItem,
+              //                   style: TextStyle(
+              //                       fontSize: 20.0,
+              //                       fontWeight: FontWeight.bold,
+              //                       color: Colors.blue)),
+              //             );
+              //           }).toList(),
+              //           value: getPriorityAsString(note.priority),
+              //           onChanged: (valueSelectedByUser) {
+              //             setState(() {
+              //               updatePriorityAsInt(valueSelectedByUser);
+              //             });
+              //           }),
+              //     ),
+              //   ),
+              // ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                child: Text(
+                  'Priority:',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue),
+                ),
               ),
-              child: ListView(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 15.0, bottom: 5.0),
-                    child: new ListTile(
-                      leading: const Icon(Icons.low_priority),
-                      title: DropdownButton(
-                          items: _prioities.map((String dropDownStringItem) {
-                            return DropdownMenuItem<String>(
-                              value: dropDownStringItem,
-                              child: Text(dropDownStringItem,
-                                  style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue)),
-                            );
-                          }).toList(),
-                          value: getPriorityAsString(note.priority),
-                          onChanged: (valueSelectedByUser) {
-                            setState(() {
-                              updatePriorityAsInt(valueSelectedByUser);
-                            });
-                          }),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                child: _switchBar(),
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(
+                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                child: Text(
+                  'Title:',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextField(
+                    controller: titleController,
+                    style: textStyle,
+                    onChanged: (value) {
+                      updateTitle();
+                    },
+                    decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                      border: InputBorder.none,
+                      // labelText: 'Title',
+                      // labelStyle: textStyle,
+                      // icon: Icon(Icons.title),
                     ),
                   ),
-                  Padding(
-                    padding:
-                        EdgeInsets.only(top: 15.0, bottom: 15.0, left: 15.0),
-                    child: TextField(
-                      controller: titleController,
-                      style: textStyle,
-                      onChanged: (value) {
-                        updateTitle();
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Title',
-                        labelStyle: textStyle,
-                        icon: Icon(Icons.title),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                child: Text(
+                  'Description:',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextField(
+                    controller: descriptionController,
+                    style: textStyle,
+                    onChanged: (value) {
+                      updateDescription();
+                    },
+                    decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      border: InputBorder.none,
+                      // labelText: 'Details',
+                      // icon: Icon(Icons.details),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: ElevatedButton(
+                        // textColor: Colors.white,
+                        // color: Colors.red,
+                        // padding: const EdgeInsets.all(8.0),
+
+                        child: Text(
+                          'Delete',
+                          textScaleFactor: 1.5,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _delete();
+                          });
+                        },
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.only(top: 15.0, bottom: 15.0, left: 15.0),
-                    child: TextField(
-                      controller: descriptionController,
-                      style: textStyle,
-                      onChanged: (value) {
-                        updateDescription();
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Details',
-                        icon: Icon(Icons.details),
+                    Container(
+                      width: 5.0,
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        // textColor: Colors.white,
+                        // color: Colors.green,
+                        // padding: const EdgeInsets.all(8.0),
+
+                        child: Text(
+                          'Save',
+                          textScaleFactor: 1.5,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _save();
+                          });
+                        },
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: RaisedButton(
-                            textColor: Colors.white,
-                            color: Colors.green,
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Save',
-                              textScaleFactor: 1.5,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                debugPrint("Save button clicked");
-                                _save();
-                              });
-                            },
-                          ),
-                        ),
-                        Container(
-                          width: 5.0,
-                        ),
-                        Expanded(
-                          child: RaisedButton(
-                            textColor: Colors.white,
-                            color: Colors.red,
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Delete',
-                              textScaleFactor: 1.5,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _delete();
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
@@ -242,5 +317,85 @@ class NoteDetailState extends State<NoteDetail> {
       content: Text(message),
     );
     showDialog(context: context, builder: (_) => alertDialog);
+  }
+
+  Widget _switchBar() {
+    return InkWell(
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)],
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(7),
+                  topLeft: Radius.circular(7),
+                ),
+                color: getPriorityAsString(note.priority) == 'High'
+                    ? Colors.blue
+                    : Colors.white,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'High',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: getPriorityAsString(note.priority) == 'High'
+                            ? Colors.white
+                            : Colors.blue),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)],
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(7),
+                    topRight: Radius.circular(7),
+                  ),
+                  color: getPriorityAsString(note.priority) == 'Low'
+                      ? Colors.blue
+                      : Colors.white),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Low',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: getPriorityAsString(note.priority) == 'Low'
+                            ? Colors.white
+                            : Colors.blue),
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+      onTap: () {
+        print('object');
+        setState(() {
+          print(getPriorityAsString(note.priority));
+          getPriorityAsString(note.priority) == "High"
+              ? updatePriorityAsInt("Low")
+              : updatePriorityAsInt("High");
+          print(getPriorityAsString(note.priority));
+        });
+      },
+    );
   }
 }
