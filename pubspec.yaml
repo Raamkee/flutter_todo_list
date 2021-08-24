@@ -15,6 +15,7 @@ dependencies:
   sqflite:
   path_provider:
   intl:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

@@ -102,43 +102,51 @@ class NoteDetailState extends State<NoteDetail> {
               // ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                    top: 20.0, bottom: 0.0, left: 20.0, right: 20.0),
                 child: Text(
                   'Priority:',
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    // color: Colors.blue,
+                  ),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                    top: 10.0, bottom: 5.0, left: 20.0, right: 20.0),
                 child: _switchBar(),
               ),
 
               Padding(
                 padding: EdgeInsets.only(
-                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                    top: 25.0, bottom: 0.0, left: 20.0, right: 20.0),
                 child: Text(
                   'Title:',
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    // color: Colors.blue,
+                  ),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                    top: 10.0, bottom: 5.0, left: 20.0, right: 20.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(9),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), blurRadius: 5)
+                    ],
                   ),
                   child: TextField(
                     controller: titleController,
-                    style: textStyle,
+                    style:
+                        // textStyle,
+                        TextStyle(fontWeight: FontWeight.bold),
                     onChanged: (value) {
                       updateTitle();
                     },
@@ -149,32 +157,43 @@ class NoteDetailState extends State<NoteDetail> {
                       // labelText: 'Title',
                       // labelStyle: textStyle,
                       // icon: Icon(Icons.title),
+                      hintText: 'Title',
+                      hintStyle: TextStyle(
+                          color: Colors.grey.withOpacity(0.6),
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                    top: 25.0, bottom: 0.0, left: 20.0, right: 20.0),
                 child: Text(
                   'Description:',
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    // color: Colors.blue,
+                  ),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                    top: 10.0, bottom: 5.0, left: 20.0, right: 20.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(9),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.1), blurRadius: 5)
+                    ],
                   ),
                   child: TextField(
                     controller: descriptionController,
-                    style: textStyle,
+                    style:
+                        // textStyle
+                        TextStyle(fontWeight: FontWeight.bold),
                     onChanged: (value) {
                       updateDescription();
                     },
@@ -184,13 +203,17 @@ class NoteDetailState extends State<NoteDetail> {
                       border: InputBorder.none,
                       // labelText: 'Details',
                       // icon: Icon(Icons.details),
+                      hintText: 'Description',
+                      hintStyle: TextStyle(
+                          color: Colors.grey.withOpacity(0.6),
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: 15.0, bottom: 5.0, left: 20.0, right: 20.0),
+                    top: 25.0, bottom: 5.0, left: 20.0, right: 20.0),
                 child: Row(
                   children: <Widget>[
                     Expanded(
@@ -199,29 +222,54 @@ class NoteDetailState extends State<NoteDetail> {
                         // color: Colors.red,
                         // padding: const EdgeInsets.all(8.0),
 
-                        child: Text(
-                          'Delete',
-                          textScaleFactor: 1.5,
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(7.0),
+                                    side: BorderSide(color: Colors.red))),
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(13.0),
+                          child: Text(
+                            appBarTitle != "Add To-Do" ? 'Delete' : 'Cancel',
+                            style: TextStyle(color: Colors.red),
+                            textScaleFactor: 1.2,
+                          ),
                         ),
                         onPressed: () {
                           setState(() {
-                            _delete();
+                            appBarTitle != "Add To-Do"
+                                ? _delete()
+                                : Navigator.of(context).pop();
                           });
                         },
                       ),
                     ),
                     Container(
-                      width: 5.0,
+                      width: 20.0,
                     ),
                     Expanded(
                       child: ElevatedButton(
                         // textColor: Colors.white,
                         // color: Colors.green,
                         // padding: const EdgeInsets.all(8.0),
-
-                        child: Text(
-                          'Save',
-                          textScaleFactor: 1.5,
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7.0),
+                              // side: BorderSide(color: Colors.red),
+                            ),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(13.0),
+                          child: Text(
+                            'Save',
+                            textScaleFactor: 1.2,
+                          ),
                         ),
                         onPressed: () {
                           setState(() {
@@ -328,27 +376,31 @@ class NoteDetailState extends State<NoteDetail> {
               alignment: Alignment.center,
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)],
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(7),
-                  topLeft: Radius.circular(7),
-                ),
-                color: getPriorityAsString(note.priority) == 'High'
-                    ? Colors.blue
-                    : Colors.white,
-              ),
+                  boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)],
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(7),
+                    topLeft: Radius.circular(7),
+                  ),
+                  color: getPriorityAsString(note.priority) == 'High'
+                      ? Colors.blue
+                      : Colors.white,
+                  border: Border.all(color: Colors.blue)),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'High',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: getPriorityAsString(note.priority) == 'High'
-                            ? Colors.white
-                            : Colors.blue),
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Text(
+                      'High',
+                      textScaleFactor: 1.3,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          // fontSize: 16,
+                          color: getPriorityAsString(note.priority) == 'High'
+                              ? Colors.white
+                              : Colors.blue),
+                    ),
                   ),
                 ],
               ),
@@ -359,26 +411,32 @@ class NoteDetailState extends State<NoteDetail> {
               alignment: Alignment.center,
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                  boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)],
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(7),
-                    topRight: Radius.circular(7),
-                  ),
-                  color: getPriorityAsString(note.priority) == 'Low'
-                      ? Colors.blue
-                      : Colors.white),
+                boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)],
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(7),
+                  topRight: Radius.circular(7),
+                ),
+                color: getPriorityAsString(note.priority) == 'Low'
+                    ? Colors.blue
+                    : Colors.white,
+                border: Border.all(color: Colors.blue),
+              ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Low',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: getPriorityAsString(note.priority) == 'Low'
-                            ? Colors.white
-                            : Colors.blue),
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Text(
+                      'Low',
+                      textScaleFactor: 1.3,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          // fontSize: 16,
+                          color: getPriorityAsString(note.priority) == 'Low'
+                              ? Colors.white
+                              : Colors.blue),
+                    ),
                   ),
                 ],
               ),

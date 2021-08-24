@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mydb_todo/Utils/AppSharedPreference.dart';
 
 class NavigationDrawer extends StatefulWidget {
   @override
@@ -7,6 +8,8 @@ class NavigationDrawer extends StatefulWidget {
 
 class NavigationDrawerState extends State<NavigationDrawer> {
   final globalKey = new GlobalKey<ScaffoldState>();
+
+  AppSharedPreference preference = AppSharedPreference();
 
   @override
   void initState() {
@@ -384,9 +387,15 @@ class NavigationDrawerState extends State<NavigationDrawer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.home,
-                      color: Colors.grey,
+                    InkWell(
+                      child: Icon(
+                        Icons.home,
+                        color: Colors.grey,
+                      ),
+                      onTap: () {
+                        preference.save('displaySection', 'home');
+                        close();
+                      },
                     ),
                     SizedBox(
                       width: 20,
@@ -407,9 +416,15 @@ class NavigationDrawerState extends State<NavigationDrawer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.search,
-                      color: Colors.grey,
+                    InkWell(
+                      child: Icon(
+                        Icons.search,
+                        color: Colors.grey,
+                      ),
+                      onTap: () {
+                        preference.save('displaySection', 'search');
+                        close();
+                      },
                     ),
                     SizedBox(
                       width: 20,
@@ -430,9 +445,18 @@ class NavigationDrawerState extends State<NavigationDrawer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.delete,
-                      color: Colors.grey,
+                    InkWell(
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.grey,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          preference.save('displaySection', 'trash');
+                        });
+
+                        close();
+                      },
                     ),
                     SizedBox(
                       width: 20,
@@ -453,9 +477,15 @@ class NavigationDrawerState extends State<NavigationDrawer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.settings,
-                      color: Colors.grey,
+                    InkWell(
+                      child: Icon(
+                        Icons.settings,
+                        color: Colors.grey,
+                      ),
+                      onTap: () {
+                        preference.save('displaySection', 'settings');
+                        close();
+                      },
                     ),
                     SizedBox(
                       width: 20,
@@ -621,5 +651,9 @@ class NavigationDrawerState extends State<NavigationDrawer> {
         ),
       ],
     );
+  }
+
+  void close() {
+    Navigator.pop(context, "fdfdf");
   }
 }

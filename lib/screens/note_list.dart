@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mydb_todo/Utils/AppSharedPreference.dart';
 import 'package:mydb_todo/screens/NavigationDrawer.dart';
 import 'dart:async';
 import '../database_helper.dart';
@@ -18,6 +19,39 @@ class _NoteListState extends State<NoteList> {
 
   bool fabExt = false;
   final globalKey = new GlobalKey<ScaffoldState>();
+
+  bool loadData = false;
+
+  bool isHomeSection = true;
+
+  String currentSection = '';
+  AppSharedPreference preference = AppSharedPreference();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLoadData();
+    prefs();
+  }
+
+  prefs() {
+    setState(() {
+      currentSection = preference.read('displaySection');
+    });
+  }
+
+  void getLoadData() {
+    setState(() {
+      loadData = false;
+    });
+    updateListView();
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      setState(() {
+        loadData = true;
+      });
+    });
+  }
 
   void navigateToDetail(Note note, String title) async {
     bool result =
@@ -79,16 +113,30 @@ class _NoteListState extends State<NoteList> {
           ),
           actions: <Widget>[
             ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        side: BorderSide(color: Colors.red))),
+              ),
               child: Text(
                 "No",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.red,
                 ),
               ),
               onPressed: () => Navigator.pop(context, false),
               // color: Colors.greenAccent,
             ),
             ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        side: BorderSide(color: Colors.blue))),
+              ),
               child: Text(
                 "Yes",
                 style: TextStyle(
@@ -177,11 +225,11 @@ class _NoteListState extends State<NoteList> {
             },
           ),
           actions: [
-            IconButton(
-                icon: Icon(Icons.settings, color: Colors.black),
-                onPressed: () {
-                  print('settings');
-                }),
+            // IconButton(
+            //     icon: Icon(Icons.settings, color: Colors.black),
+            //     onPressed: () {
+            //       print('settings');
+            //     }),
             IconButton(
                 icon: Icon(Icons.more_vert_rounded, color: Colors.black),
                 onPressed: () {
@@ -189,24 +237,39 @@ class _NoteListState extends State<NoteList> {
                 })
           ],
         ),
-        body: GestureDetector(
-          child: ListView(physics: ClampingScrollPhysics(), children: [
-            getNoteListView(),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 8.0, right: 8.0, bottom: 8.0, top: 3),
-              child: Container(
-                child: ListTile(),
-              ),
-            )
-          ]),
-          onTap: () {
-            setState(() {
-              fabExt = false;
-            });
-            print('gesture..');
-          },
-        ),
+        body:
+
+            // currentSection=="home"?
+            _homeSection(),
+        // :currentSection=="search"?:currentSection=="trash"?currentSection=="settings"?,
+
+        // GestureDetector(
+        //   child: Center(
+        //     child: ListView(physics: ClampingScrollPhysics(), children: [
+        //       loadData
+        //           ? getNoteListView()
+        //           : Center(
+        //               child: Container(
+        //                   height: 25,
+        //                   width: 25,
+        //                   child: CircularProgressIndicator())),
+        //       Padding(
+        //         padding: const EdgeInsets.only(
+        //             left: 8.0, right: 8.0, bottom: 8.0, top: 3),
+        //         child: Container(
+        //           child: ListTile(),
+        //         ),
+        //       )
+        //     ]),
+        //   ),
+        //   onTap: () {
+        //     setState(() {
+        //       fabExt = false;
+        //     });
+        //     print('gesture..');
+        //   },
+        // ),
+
         floatingActionButton:
 
             // FloatingActionButton.extended(
@@ -218,19 +281,21 @@ class _NoteListState extends State<NoteList> {
             //     navigateToDetail(Note("", "", 2), "Add Note");
             //   },
             // ),
-            !fabExt
-                ? FloatingActionButton(
-                    backgroundColor: Colors.blue,
-                    child: Icon(Icons.add),
-                    onPressed: () {
-                      setState(() {
-                        fabExt ? fabExt = false : fabExt = true;
-                      });
-                    },
-                  )
-                :
-                // _fabSmallIcon(),
-                _xtendedFabBg(),
+            isHomeSection
+                ? !fabExt
+                    ? FloatingActionButton(
+                        backgroundColor: Colors.blue,
+                        child: Icon(Icons.add),
+                        onPressed: () {
+                          setState(() {
+                            fabExt ? fabExt = false : fabExt = true;
+                          });
+                        },
+                      )
+                    :
+                    // _fabSmallIcon(),
+                    _xtendedFabBg()
+                : null,
         // _xtendedFabNoBg(),
       ),
     );
@@ -253,14 +318,14 @@ class _NoteListState extends State<NoteList> {
             ),
             child: ListTile(
               leading: Container(
-                padding: EdgeInsets.all(3),
+                padding: EdgeInsets.all(1),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  border: Border.all(width: 2, color: Colors.blue),
+                  // border: Border.all(width: 2, color: Colors.blue),
                 ),
                 child: Icon(
-                  Icons.list,
-                  size: 34,
+                  Icons.check_box_outlined,
+                  size: 26,
                   color: Colors.blue,
                 ),
               ),
@@ -280,7 +345,7 @@ class _NoteListState extends State<NoteList> {
                 child: Icon(
                   Icons.edit,
                   color: Colors.blue,
-                  size: 32,
+                  size: 24,
                 ),
                 onTap: () {
                   navigateToDetail(this.noteList[position], "Edit Todo");
@@ -293,61 +358,123 @@ class _NoteListState extends State<NoteList> {
                       return Dialog(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15)),
-                        child: SingleChildScrollView(
-                          child: Container(
-                            child: Column(
-                              children: [
-                                ListTile(
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 5, color: Colors.grey)
+                                    ],
+                                    color: Colors.white),
+                                child: ListTile(
+                                  visualDensity: VisualDensity(
+                                      horizontal: 4, vertical: -4),
                                   title: Text(
                                     this.noteList[position].title,
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 20.0),
+                                        fontSize: 18.0),
                                   ),
                                   subtitle: Text(
                                     this.noteList[position].date,
-                                    style: TextStyle(color: Colors.black),
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  trailing: GestureDetector(
+                                    child: Icon(
+                                      Icons.close,
+                                    ),
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    onLongPress: () {
+                                      Navigator.of(context).pop();
+                                    },
                                   ),
                                 ),
-                                ListTile(
-                                  title: Text(
-                                    'Priority:',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0),
-                                  ),
-                                  subtitle: this.noteList[position].priority ==
-                                          1
-                                      ? Text(
-                                          'High',
-                                          style: TextStyle(color: Colors.black),
-                                        )
-                                      : Text(
-                                          'Low',
-                                          style: TextStyle(color: Colors.black),
+                              ),
+                              SingleChildScrollView(
+                                child: Container(
+                                  child: Column(
+                                    children: [
+                                      // ListTile(
+                                      //   title: Text(
+                                      //     this.noteList[position].title,
+                                      //     style: TextStyle(
+                                      //         color: Colors.black,
+                                      //         fontWeight: FontWeight.bold,
+                                      //         fontSize: 20.0),
+                                      //   ),
+                                      //   subtitle: Text(
+                                      //     this.noteList[position].date,
+                                      //     style: TextStyle(color: Colors.black),
+                                      //   ),
+                                      // ),
+                                      ListTile(
+                                        title: Text(
+                                          'Priority:',
+                                          style: TextStyle(
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold),
                                         ),
-                                ),
-                                ListTile(
-                                  title: Text(
-                                    'Description:',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0),
+                                        subtitle: this
+                                                    .noteList[position]
+                                                    .priority ==
+                                                1
+                                            ? Text(
+                                                'High',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18.0),
+                                              )
+                                            : Text(
+                                                'Low',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18.0,
+                                                ),
+                                              ),
+                                      ),
+                                      ListTile(
+                                        title: Text(
+                                          'Description:',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.bold,
+                                            // fontSize: 20.0,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          this.noteList[position].description,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 18.0),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  subtitle: Text(
-                                    this.noteList[position].description,
-                                    style: TextStyle(color: Colors.black),
-                                  ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       );
                     });
+              },
+              onLongPress: () {
+                _modalBottomSheet(context, this.noteList[position]);
               },
             ),
           ),
@@ -527,5 +654,150 @@ class _NoteListState extends State<NoteList> {
         heroTag: null,
       ),
     ]);
+  }
+
+  _modalBottomSheet(context, getPosition) {
+    showModalBottomSheet(
+      isScrollControlled: false,
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => Container(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              )),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 5),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0, bottom: 20),
+                      child: Container(
+                        height: 5,
+                        width: 35,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.grey.withOpacity(0.5),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          children: [
+                            IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  moveToLastScreen();
+                                  _delete(getPosition);
+                                }),
+                            Text(
+                              'Delete',
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            IconButton(
+                                icon: Icon(Icons.edit, color: Colors.blue),
+                                onPressed: () {
+                                  moveToLastScreen();
+                                  navigateToDetail(getPosition, "Edit Todo");
+                                }),
+                            Text(
+                              'Edit',
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _delete(noteId) async {
+    moveToLastScreen();
+    if (noteId.id == null) {
+      _showAlertDialog("Status", "First Add a Note");
+      getLoadData();
+      return;
+    }
+    int result = await databaseHelper.deleteNote(noteId.id);
+
+    if (result != 0) {
+      _showAlertDialog("Status", "Note Deleted Successfully");
+      getLoadData();
+    } else {
+      _showAlertDialog("Status", "Error Occured!");
+      getLoadData();
+    }
+  }
+
+  void moveToLastScreen() {
+    getLoadData();
+    Navigator.pop(context, true);
+  }
+
+  void _showAlertDialog(String title, String message) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+    );
+    showDialog(context: context, builder: (_) => alertDialog);
+  }
+
+  Widget _homeSection() {
+    return GestureDetector(
+      child: Center(
+        child: ListView(physics: ClampingScrollPhysics(), children: [
+          loadData
+              ? getNoteListView()
+              : Center(
+                  child: Container(
+                      height: 25,
+                      width: 25,
+                      child: CircularProgressIndicator())),
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 8.0, right: 8.0, bottom: 8.0, top: 3),
+            child: Container(
+              child: ListTile(),
+            ),
+          )
+        ]),
+      ),
+      onTap: () {
+        setState(() {
+          fabExt = false;
+        });
+        print('gesture..');
+      },
+    );
   }
 }
