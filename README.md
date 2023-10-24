@@ -4,7 +4,7 @@
 
 > # Todo List Page
 
-<img src="[Assets/icon.png](https://github.com/Raamkee/flutter_todo_list/blob/main/Screenshots/Screenshot_1615464534.png" width="200">
+<img src="https://github.com/Raamkee/flutter_todo_list/blob/main/Screenshots/Screenshot_1615464534.png" width="200">
 
 ### This Page Will Display The List Of Tasks From The Database On The Phone
 
